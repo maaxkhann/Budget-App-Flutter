@@ -6,10 +6,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final viewModel = ChangeNotifierProvider.autoDispose<ViewModel>(
   (ref) => ViewModel(),
 );
+
+final authStateProvider = StreamProvider<bool>((ref) {
+  return FirebaseAuth.instance.authStateChanges().map((user) => user != null);
+});
 
 class ViewModel extends ChangeNotifier {
   final auth = FirebaseAuth.instance;
@@ -17,8 +22,12 @@ class ViewModel extends ChangeNotifier {
 
   bool isSignedIn = false;
   bool isObscure = true;
+  List expensesName = [];
+  List expensesAmount = [];
+  List incomeName = [];
+  List incomeAmount = [];
 
-  void isLoggedIn() {
+  void isLoggedIn() async {
     auth.authStateChanges().listen((User? user) {
       if (user == null) {
         isSignedIn = false;
@@ -26,7 +35,7 @@ class ViewModel extends ChangeNotifier {
         isSignedIn = true;
       }
     });
-    // notifyListeners();
+    //  notifyListeners();
   }
 
   toggleObscure() {
@@ -93,13 +102,14 @@ class ViewModel extends ChangeNotifier {
     String password,
   ) async {
     try {
-       final GoogleSignInAccount account = await _google
-      .authenticate(scopeHint: const ['email']);
+      final GoogleSignInAccount account = await _google.authenticate(
+        scopeHint: const ['email'],
+      );
       final String? idToken = account.authentication.idToken;
       final credential = GoogleAuthProvider.credential(idToken: idToken);
       await auth
-      .signInWithCredential(credential)
-      .then((value) => print('User signed in: ${value.user?.email}'));
+          .signInWithCredential(credential)
+          .then((value) => print('User signed in: ${value.user?.email}'));
     } on FirebaseAuthException catch (e) {
       appDialog(context, e.code.replaceAll(RegExp('\\[.*?\\]'), ''));
       if (kDebugMode) {
@@ -107,5 +117,9 @@ class ViewModel extends ChangeNotifier {
         print(e.message);
       }
     }
+  }
+
+  Future<void> logout() async {
+    await auth.signOut();
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:budget_app/components/app_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ final authStateProvider = StreamProvider<bool>((ref) {
 class ViewModel extends ChangeNotifier {
   final auth = FirebaseAuth.instance;
   final GoogleSignIn _google = GoogleSignIn.instance;
+  CollectionReference userRef = FirebaseFirestore.instance.collection('users');
 
   bool isSignedIn = false;
   bool isObscure = true;
@@ -27,16 +29,16 @@ class ViewModel extends ChangeNotifier {
   List incomeName = [];
   List incomeAmount = [];
 
-  void isLoggedIn() async {
-    auth.authStateChanges().listen((User? user) {
-      if (user == null) {
-        isSignedIn = false;
-      } else {
-        isSignedIn = true;
-      }
-    });
-    //  notifyListeners();
-  }
+  // void isLoggedIn() async {
+  //   auth.authStateChanges().listen((User? user) {
+  //     if (user == null) {
+  //       isSignedIn = false;
+  //     } else {
+  //       isSignedIn = true;
+  //     }
+  //   });
+  //   //  notifyListeners();
+  // }
 
   toggleObscure() {
     isObscure = !isObscure;
@@ -110,6 +112,48 @@ class ViewModel extends ChangeNotifier {
       await auth
           .signInWithCredential(credential)
           .then((value) => print('User signed in: ${value.user?.email}'));
+    } on FirebaseAuthException catch (e) {
+      appDialog(context, e.code.replaceAll(RegExp('\\[.*?\\]'), ''));
+      if (kDebugMode) {
+        print('Failed with error code: ${e.code}');
+        print(e.message);
+      }
+    }
+  }
+
+  Future<void> addExpense(
+    BuildContext context,
+    String name,
+    String amount,
+  ) async {
+    try {
+      await userRef.doc(auth.currentUser?.uid).collection('expenses').add({
+        'name': name,
+        'amount': amount,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      appDialog(context, e.code.replaceAll(RegExp('\\[.*?\\]'), ''));
+      if (kDebugMode) {
+        print('Failed with error code: ${e.code}');
+        print(e.message);
+      }
+    }
+  }
+
+  Future<void> addIncome(
+    BuildContext context,
+    String name,
+    String amount,
+  ) async {
+    try {
+      await userRef.doc(auth.currentUser?.uid).collection('incomes').add({
+        'name': name,
+        'amount': amount,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       appDialog(context, e.code.replaceAll(RegExp('\\[.*?\\]'), ''));
       if (kDebugMode) {

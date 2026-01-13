@@ -1,6 +1,6 @@
 import 'package:budget_app/mobile/expense_view_mobile.dart';
 import 'package:budget_app/mobile/login_view_mobile.dart';
-import 'package:budget_app/view-model/view_model.dart';
+import 'package:budget_app/view-model/auth_view_model.dart';
 import 'package:budget_app/web/expense_view_web.dart';
 import 'package:budget_app/web/login_view_web.dart';
 import 'package:flutter/material.dart';

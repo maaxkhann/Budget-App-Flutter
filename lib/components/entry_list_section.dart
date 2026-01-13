@@ -1,0 +1,51 @@
+import 'package:budget_app/view-model/home_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'app_text.dart';
+import 'add_entry_dialog.dart';
+
+class EntryListSection extends ConsumerWidget {
+  final EntryType type;
+
+  const EntryListSection({super.key, required this.type});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final vm = ref.watch(homeViewModelProvider);
+
+    final names = type == EntryType.expense ? vm.expensesName : vm.incomeName;
+    final amounts = type == EntryType.expense
+        ? vm.expensesAmount
+        : vm.incomeAmount;
+
+    return Column(
+      children: [
+        OpenSans(
+          text: type == EntryType.expense ? 'Expenses' : 'Incomes',
+          fontSize: 15,
+        ),
+        Container(
+          padding: const EdgeInsets.all(7),
+          height: 210,
+          width: 180,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(width: 1, color: Colors.black),
+          ),
+          child: ListView.builder(
+            itemCount: amounts.length,
+            itemBuilder: (_, index) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OpenSans(text: names[index], fontSize: 12),
+                  OpenSans(text: amounts[index].toString(), fontSize: 12),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}

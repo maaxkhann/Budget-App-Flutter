@@ -1,5 +1,5 @@
 import 'package:budget_app/components/app_text.dart';
-import 'package:budget_app/view-model/view_model.dart';
+import 'package:budget_app/view-model/auth_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -13,7 +13,7 @@ class LoginViewMobile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emailCont = useTextEditingController();
     final passwordCont = useTextEditingController();
-    final viewModelProvider = ref.watch(viewModel);
+    final viewModelProvider = ref.watch(authViewModelProvider);
     final height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(

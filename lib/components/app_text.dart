@@ -6,8 +6,7 @@ class OpenSans extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
   final Color color;
-  const OpenSans(
-    String s, {
+  const OpenSans({
     super.key,
     required this.text,
     this.fontSize = 15,

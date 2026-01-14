@@ -26,9 +26,9 @@ class EntryListSection extends ConsumerWidget {
           fontSize: isWeb ? 18 : 15,
         ),
         Container(
-          padding: const EdgeInsets.all(7),
+          padding: EdgeInsets.all(isWeb ? 10 : 7),
           height: 210,
-          width: 180,
+          width: isWeb ? 200 : 180,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(width: 1, color: Colors.black),

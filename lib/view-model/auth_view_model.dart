@@ -1,11 +1,10 @@
 import 'dart:async';
+import 'package:budget_app/shared/utilities/pops.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../components/app_dialog.dart';
 import '../helper/firebase_exception_handler.dart';
 
 final authViewModelProvider = ChangeNotifierProvider.autoDispose<AuthViewModel>(
@@ -29,7 +28,6 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<void> createUserWithEmailAndPassword(
-    BuildContext context,
     String email,
     String password,
   ) async {
@@ -38,46 +36,32 @@ class AuthViewModel extends ChangeNotifier {
         email: email,
         password: password,
       );
-      appDialog(context, 'Registered Successfully');
+      Pops.showToast('Registered Successfully');
     } catch (e) {
-      FirebaseExceptionHandler.handle(context, e);
+      FirebaseExceptionHandler.handle(e);
     }
   }
 
-  Future<void> signInWithEmailAndPassword(
-    BuildContext context,
-    String email,
-    String password,
-  ) async {
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
-      await auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((val) => print('user signed in: ${val.user?.email}'));
-      appDialog(context, 'Logged In Successfully');
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      Pops.showToast('Logged In Successfully');
     } catch (e) {
-      FirebaseExceptionHandler.handle(context, e);
+      FirebaseExceptionHandler.handle(e);
     }
   }
 
-  Future<void> signInWithGoogleWeb(
-    BuildContext context,
-    String email,
-    String password,
-  ) async {
+  Future<void> signInWithGoogleWeb(String email, String password) async {
     try {
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
       await auth.signInWithPopup(googleAuthProvider);
-      appDialog(context, 'Logged In Successfully');
+      Pops.showToast('Logged In Successfully');
     } catch (e) {
-      FirebaseExceptionHandler.handle(context, e);
+      FirebaseExceptionHandler.handle(e);
     }
   }
 
-  Future<void> signInWithGoogleMobile(
-    BuildContext context,
-    String email,
-    String password,
-  ) async {
+  Future<void> signInWithGoogleMobile(String email, String password) async {
     try {
       final GoogleSignInAccount account = await _google.authenticate(
         scopeHint: const ['email'],
@@ -85,17 +69,17 @@ class AuthViewModel extends ChangeNotifier {
       final String? idToken = account.authentication.idToken;
       final credential = GoogleAuthProvider.credential(idToken: idToken);
       await auth.signInWithCredential(credential);
-      appDialog(context, 'Logged In Successfully');
+      Pops.showToast('Logged In Successfully');
     } catch (e) {
-      FirebaseExceptionHandler.handle(context, e);
+      FirebaseExceptionHandler.handle(e);
     }
   }
 
-  Future<void> logout(BuildContext context) async {
+  Future<void> logout() async {
     try {
       await auth.signOut();
     } catch (e) {
-      FirebaseExceptionHandler.handle(context, e);
+      FirebaseExceptionHandler.handle(e);
     }
   }
 }

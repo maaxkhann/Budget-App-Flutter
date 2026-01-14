@@ -37,6 +37,7 @@ class CustomDrawer extends HookConsumerWidget {
           ),
           10.spaceY,
           MaterialButton(
+            elevation: 20,
             color: Colors.black,
             height: 50,
             minWidth: 200,
@@ -44,7 +45,7 @@ class CustomDrawer extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(5),
               //   elevation: 20,
             ),
-            onPressed: () async => await viewModelProvider.logout(context),
+            onPressed: () async => await viewModelProvider.logout(),
             child: OpenSans(text: 'Logout', fontSize: 20, color: Colors.white),
           ),
           20.spaceY,

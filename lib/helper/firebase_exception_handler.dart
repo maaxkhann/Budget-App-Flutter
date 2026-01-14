@@ -1,11 +1,10 @@
-import 'package:budget_app/components/app_dialog.dart';
+import 'package:budget_app/shared/utilities/pops.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 class FirebaseExceptionHandler {
   /// Central method to handle all firebase errors
-  static void handle(BuildContext context, Object error) {
+  static void handle(Object error) {
     String message = 'An unknown error occurred. Please try again.';
 
     // -------- Firebase Auth Exceptions --------
@@ -24,7 +23,7 @@ class FirebaseExceptionHandler {
     }
 
     // Show dialog (UI message)
-    appDialog(context, message);
+    Pops.showError(message);
 
     if (kDebugMode) {
       print('Firebase Error: $error');

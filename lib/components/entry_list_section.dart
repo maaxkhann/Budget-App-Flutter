@@ -6,8 +6,9 @@ import 'add_entry_dialog.dart';
 
 class EntryListSection extends ConsumerWidget {
   final EntryType type;
+  final bool isWeb;
 
-  const EntryListSection({super.key, required this.type});
+  const EntryListSection({super.key, required this.type, this.isWeb = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +23,7 @@ class EntryListSection extends ConsumerWidget {
       children: [
         OpenSans(
           text: type == EntryType.expense ? 'Expenses' : 'Incomes',
-          fontSize: 15,
+          fontSize: isWeb ? 18 : 15,
         ),
         Container(
           padding: const EdgeInsets.all(7),
@@ -38,8 +39,11 @@ class EntryListSection extends ConsumerWidget {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OpenSans(text: names[index], fontSize: 12),
-                  OpenSans(text: amounts[index].toString(), fontSize: 12),
+                  OpenSans(text: names[index], fontSize: isWeb ? 15 : 12),
+                  OpenSans(
+                    text: amounts[index].toString(),
+                    fontSize: isWeb ? 15 : 12,
+                  ),
                 ],
               );
             },

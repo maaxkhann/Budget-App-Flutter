@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:budget_app/shared/utilities/pops.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../components/app_dialog.dart';
 import '../helper/firebase_exception_handler.dart';
 
 final homeViewModelProvider = ChangeNotifierProvider.autoDispose<HomeViewModel>(
@@ -28,15 +28,19 @@ class HomeViewModel extends ChangeNotifier {
     String amount,
   ) async {
     try {
-      await userRef.doc(auth.currentUser?.uid).collection('expenses').add({
+      var expenseRef = userRef
+          .doc(auth.currentUser?.uid)
+          .collection('expenses');
+      await expenseRef.add({
         'name': name,
         'amount': amount,
         'timestamp': FieldValue.serverTimestamp(),
       });
+      if (!context.mounted) return;
       Navigator.pop(context);
-      appDialog(context, 'Expense Added');
+      Pops.showToast('Expense Added');
     } catch (e) {
-      FirebaseExceptionHandler.handle(context, e);
+      FirebaseExceptionHandler.handle(e);
     }
   }
 
@@ -51,10 +55,11 @@ class HomeViewModel extends ChangeNotifier {
         'amount': amount,
         'timestamp': FieldValue.serverTimestamp(),
       });
+      if (!context.mounted) return;
       Navigator.pop(context);
-      appDialog(context, 'Income Added');
+      Pops.showToast('Income Added');
     } catch (e) {
-      FirebaseExceptionHandler.handle(context, e);
+      FirebaseExceptionHandler.handle(e);
     }
   }
 

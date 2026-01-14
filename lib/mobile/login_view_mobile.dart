@@ -93,7 +93,6 @@ class LoginViewMobile extends HookConsumerWidget {
                       ),
                       onPressed: () =>
                           viewModelProvider.createUserWithEmailAndPassword(
-                            context,
                             emailCont.text.trim(),
                             passwordCont.text.trim(),
                           ),
@@ -116,7 +115,6 @@ class LoginViewMobile extends HookConsumerWidget {
                       ),
                       onPressed: () =>
                           viewModelProvider.signInWithEmailAndPassword(
-                            context,
                             emailCont.text.trim(),
                             passwordCont.text.trim(),
                           ),
@@ -142,13 +140,11 @@ class LoginViewMobile extends HookConsumerWidget {
                   onPressed: () {
                     if (kIsWeb) {
                       viewModelProvider.signInWithGoogleWeb(
-                        context,
                         emailCont.text.trim(),
                         passwordCont.text.trim(),
                       );
                     } else {
                       viewModelProvider.signInWithGoogleMobile(
-                        context,
                         emailCont.text.trim(),
                         passwordCont.text.trim(),
                       );

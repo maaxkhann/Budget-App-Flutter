@@ -1,50 +1,73 @@
+import 'package:budget_app/components/custom_button.dart';
 import 'package:flutter/material.dart';
+
 import 'add_entry_dialog.dart';
-import 'app_text.dart';
 
 class AddActionButtons extends StatelessWidget {
-  const AddActionButtons({super.key});
+  final bool isWeb;
+  const AddActionButtons({super.key, this.isWeb = false});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: const [
-        _AddButton(title: 'Add Expense', type: EntryType.expense),
-        _AddButton(title: 'Add Income', type: EntryType.income),
-      ],
-    );
-  }
-}
+    return !isWeb
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomButton(
+                title: 'Add Expense',
+                height: 40,
+                icon: Icon(Icons.add, color: Colors.white, size: 14),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AddEntryDialog(type: EntryType.expense),
+                  );
+                },
+              ),
+              CustomButton(
+                title: 'Add Expense',
+                height: 40,
+                icon: Icon(Icons.add, color: Colors.white, size: 14),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AddEntryDialog(type: EntryType.income),
+                  );
+                },
+              ),
+            ],
+          )
+        : Column(
+            spacing: 20,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Add expense
+              CustomButton(
+                title: 'Add Expense',
+                height: 45,
+                width: 160,
+                icon: Icon(Icons.add, color: Colors.white, size: 14),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AddEntryDialog(type: EntryType.expense),
+                  );
+                },
+              ),
 
-class _AddButton extends StatelessWidget {
-  final String title;
-  final EntryType type;
-
-  const _AddButton({required this.title, required this.type});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      width: 150,
-      child: MaterialButton(
-        color: Colors.black,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (_) => AddEntryDialog(type: type),
+              CustomButton(
+                title: 'Add Income',
+                height: 45,
+                width: 160,
+                icon: Icon(Icons.add, color: Colors.white, size: 14),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AddEntryDialog(type: EntryType.income),
+                  );
+                },
+              ),
+            ],
           );
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Icon(Icons.add, color: Colors.white, size: 14),
-            OpenSans(text: title, fontSize: 14, color: Colors.white),
-          ],
-        ),
-      ),
-    );
   }
 }

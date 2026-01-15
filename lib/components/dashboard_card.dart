@@ -1,4 +1,3 @@
-import 'package:budget_app/shared/extensions/build_context.dart';
 import 'package:flutter/material.dart';
 import 'app_text.dart';
 
@@ -18,8 +17,6 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = context.width;
-
     return Center(
       child: Container(
         padding: EdgeInsets.all(isWeb ? 10 : 15),

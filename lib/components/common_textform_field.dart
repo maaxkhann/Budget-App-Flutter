@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CommonTextFormField extends StatelessWidget {
@@ -15,6 +16,7 @@ class CommonTextFormField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onChanged;
   final BorderRadius borderRadius;
+  final bool isNumber;
 
   // OPTIONAL – ICONS
   final IconData? prefixIcon;
@@ -34,6 +36,7 @@ class CommonTextFormField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.isNumber = false,
     this.prefixIcon,
     this.onPrefixIconPressed,
     this.iconColor = Colors.black,
@@ -50,10 +53,15 @@ class CommonTextFormField extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         validator: validator,
+        inputFormatters: isNumber
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : [],
         onChanged: onChanged,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(borderRadius: borderRadius),
           enabledBorder: OutlineInputBorder(borderRadius: borderRadius),
+          errorBorder: OutlineInputBorder(borderRadius: borderRadius),
+          focusedErrorBorder: OutlineInputBorder(borderRadius: borderRadius),
           prefixIcon: prefixIcon == null
               ? null
               : IconButton(

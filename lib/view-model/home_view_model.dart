@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../helper/firebase_exception_handler.dart';
+import '../models/model.dart';
 
 final homeViewModelProvider = ChangeNotifierProvider.autoDispose<HomeViewModel>(
   (ref) => HomeViewModel(),
@@ -17,10 +18,26 @@ class HomeViewModel extends ChangeNotifier {
   final auth = FirebaseAuth.instance;
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
 
-  List expensesName = [];
-  List expensesAmount = [];
-  List incomeName = [];
-  List incomeAmount = [];
+  List<Model> expenses = [];
+  List<Model> incomes = [];
+
+  int totalExpense = 0;
+  int totalIncome = 0;
+  int budgetLeft = 0;
+
+  void calculate() {
+    totalExpense = 0;
+    totalIncome = 0;
+
+    for (int i = 0; i < expenses.length; i++) {
+      totalExpense += int.parse(expenses[i].amount);
+    }
+    for (int i = 0; i < incomes.length; i++) {
+      totalIncome += int.parse(incomes[i].amount);
+    }
+    budgetLeft = totalIncome - totalExpense;
+    notifyListeners();
+  }
 
   Future<void> addExpense(
     BuildContext context,
@@ -70,13 +87,12 @@ class HomeViewModel extends ChangeNotifier {
               .doc(auth.currentUser?.uid)
               .collection('expenses')
               .snapshots()) {
-        expensesAmount = [];
-        expensesName = [];
-        for (var expense in snapshot.docs) {
-          expensesName.add(expense.data()['name']);
-          expensesAmount.add(expense.data()['amount']);
-          notifyListeners();
+        expenses = [];
+        for (var element in snapshot.docs) {
+          expenses.add(Model.fromJson(element.data()));
         }
+        notifyListeners();
+        calculate();
       }
     } catch (e) {
       if (kDebugMode) {
@@ -92,13 +108,12 @@ class HomeViewModel extends ChangeNotifier {
               .doc(auth.currentUser?.uid)
               .collection('incomes')
               .snapshots()) {
-        incomeAmount = [];
-        incomeName = [];
-        for (var income in snapshot.docs) {
-          incomeName.add(income.data()['name']);
-          incomeAmount.add(income.data()['amount']);
-          notifyListeners();
+        incomes = [];
+        for (var element in snapshot.docs) {
+          incomes.add(Model.fromJson(element.data()));
         }
+        notifyListeners();
+        calculate();
       }
     } catch (e) {
       if (kDebugMode) {

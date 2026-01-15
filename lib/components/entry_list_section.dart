@@ -1,3 +1,4 @@
+import 'package:budget_app/shared/sizedbox.dart';
 import 'package:budget_app/view-model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,16 +15,17 @@ class EntryListSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeViewModelProvider);
 
-    final names = type == EntryType.expense ? vm.expensesName : vm.incomeName;
-    final amounts = type == EntryType.expense
-        ? vm.expensesAmount
-        : vm.incomeAmount;
+    final data = type == EntryType.expense ? vm.expenses : vm.incomes;
+    // final amounts = type == EntryType.expense
+    //     ? vm.expensesAmount
+    //     : vm.incomeAmount;
 
     return Column(
       children: [
         OpenSans(
           text: type == EntryType.expense ? 'Expenses' : 'Incomes',
           fontSize: isWeb ? 18 : 15,
+          fontWeight: FontWeight.w500,
         ),
         Container(
           padding: EdgeInsets.all(isWeb ? 10 : 7),
@@ -33,16 +35,25 @@ class EntryListSection extends ConsumerWidget {
             borderRadius: BorderRadius.circular(15),
             border: Border.all(width: 1, color: Colors.black),
           ),
-          child: ListView.builder(
-            itemCount: amounts.length,
+          child: ListView.separated(
+            itemCount: data.length,
+            separatorBuilder: (context, index) => 5.spaceY,
             itemBuilder: (_, index) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OpenSans(text: names[index], fontSize: isWeb ? 15 : 12),
-                  OpenSans(
-                    text: amounts[index].toString(),
-                    fontSize: isWeb ? 15 : 12,
+                  Flexible(
+                    child: OpenSans(
+                      text: data[index].name,
+                      fontSize: isWeb ? 15 : 12,
+                    ),
+                  ),
+                  Spacer(),
+                  Flexible(
+                    child: OpenSans(
+                      text: data[index].amount.toString(),
+                      fontSize: isWeb ? 15 : 12,
+                    ),
                   ),
                 ],
               );

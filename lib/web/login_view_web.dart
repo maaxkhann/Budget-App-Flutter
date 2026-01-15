@@ -1,5 +1,6 @@
+import 'package:budget_app/components/custom_button.dart';
+import 'package:budget_app/shared/sizedbox.dart';
 import 'package:budget_app/view-model/auth_view_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,6 +18,7 @@ class LoginViewWeb extends HookConsumerWidget {
     final viewModelProvider = ref.watch(authViewModelProvider);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    final formKey = GlobalKey<FormState>();
     return SafeArea(
       child: Scaffold(
         body: Row(
@@ -37,102 +39,77 @@ class LoginViewWeb extends HookConsumerWidget {
                     fit: BoxFit.contain,
                     width: 200,
                   ),
-                  SizedBox(height: 40),
-                  CommonTextFormField(
-                    controller: emailCont,
-                    hintText: 'Email',
-                    prefixIcon: Icons.email,
-                    keyboardType: TextInputType.emailAddress,
+                  40.spaceY,
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        CommonTextFormField(
+                          controller: emailCont,
+                          hintText: 'Email',
+                          prefixIcon: Icons.email,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (text) =>
+                              text!.isEmpty ? 'Required' : null,
+                        ),
+                        20.spaceY,
+                        CommonTextFormField(
+                          controller: passwordCont,
+                          hintText: 'Password',
+                          obscureText: viewModelProvider.isObscure,
+                          prefixIcon: viewModelProvider.isObscure
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          onPrefixIconPressed: viewModelProvider.toggleObscure,
+                          validator: (text) =>
+                              text!.isEmpty ? 'Required' : null,
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 20),
-                  CommonTextFormField(
-                    controller: passwordCont,
-                    hintText: 'Password',
-                    obscureText: viewModelProvider.isObscure,
-                    prefixIcon: viewModelProvider.isObscure
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    onPrefixIconPressed: viewModelProvider.toggleObscure,
-                  ),
-                  SizedBox(height: 30),
+                  30.spaceY,
                   Row(
                     spacing: 20,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: MaterialButton(
-                          splashColor: Colors.grey,
-                          color: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () =>
-                              viewModelProvider.createUserWithEmailAndPassword(
-                                emailCont.text.trim(),
-                                passwordCont.text.trim(),
-                              ),
-                          child: OpenSans(
-                            text: 'Register',
-                            fontSize: 25,
-                            color: Colors.white,
-                          ),
-                        ),
+                      CustomButton(
+                        title: 'Register',
+                        fontSize: 25,
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            viewModelProvider.createUserWithEmailAndPassword(
+                              emailCont.text.trim(),
+                              passwordCont.text.trim(),
+                            );
+                          }
+                        },
                       ),
                       OpenSans(text: 'Or'),
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: MaterialButton(
-                          splashColor: Colors.grey,
-                          color: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () =>
-                              viewModelProvider.signInWithEmailAndPassword(
-                                emailCont.text.trim(),
-                                passwordCont.text.trim(),
-                              ),
-                          child: OpenSans(
-                            text: 'Login',
-                            fontSize: 25,
-                            color: Colors.white,
-                          ),
-                        ),
+                      CustomButton(
+                        title: 'Login',
+                        fontSize: 25,
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            viewModelProvider.signInWithEmailAndPassword(
+                              emailCont.text.trim(),
+                              passwordCont.text.trim(),
+                            );
+                          }
+                        },
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
-                  SizedBox(
-                    height: 50,
+                  30.spaceY,
+                  CustomButton(
+                    title: 'Google',
                     width: 350,
-                    child: MaterialButton(
-                      splashColor: Colors.grey,
-                      color: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onPressed: () {
-                        if (kIsWeb) {
-                          viewModelProvider.signInWithGoogleWeb(
-                            emailCont.text.trim(),
-                            passwordCont.text.trim(),
-                          );
-                        } else {
-                          viewModelProvider.signInWithGoogleMobile(
-                            emailCont.text.trim(),
-                            passwordCont.text.trim(),
-                          );
-                        }
-                      },
-                      child: OpenSans(
-                        text: 'Google',
-                        fontSize: 25,
-                        color: Colors.white,
-                      ),
-                    ),
+                    fontSize: 25,
+                    onPressed: () {
+                      viewModelProvider.signInWithGoogleWeb(
+                        emailCont.text.trim(),
+                        passwordCont.text.trim(),
+                      );
+                    },
                   ),
                 ],
               ),

@@ -1,7 +1,8 @@
+import 'package:budget_app/components/common_textform_field.dart';
+import 'package:budget_app/components/custom_button.dart';
 import 'package:budget_app/view-model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'custom_textfield.dart';
 import 'app_text.dart';
 
 enum EntryType { expense, income }
@@ -21,27 +22,43 @@ class AddEntryDialog extends ConsumerWidget {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      contentPadding: const EdgeInsets.all(32),
+      contentPadding: const EdgeInsets.all(24),
       title: Form(
         key: _formKey,
         child: Row(
           spacing: 15,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CustomTextField(
-              controller: _nameController,
-              title: 'Name',
-              hintText: 'Enter Name',
-              width: 150,
-              validator: (text) => text!.isEmpty ? 'Required' : null,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 5,
+                children: [
+                  OpenSans(text: 'Name', fontSize: 13),
+                  CommonTextFormField(
+                    controller: _nameController,
+                    hintText: 'Enter Name',
+                    width: 150,
+                    validator: (text) => text!.isEmpty ? 'Required' : null,
+                  ),
+                ],
+              ),
             ),
-            CustomTextField(
-              controller: _amountController,
-              title: 'Amount',
-              hintText: 'Enter Amount',
-              isNumber: true,
-              width: 150,
-              validator: (text) => text!.isEmpty ? 'Required' : null,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 5,
+                children: [
+                  OpenSans(text: 'Amount', fontSize: 13),
+                  CommonTextFormField(
+                    controller: _amountController,
+                    hintText: 'Enter Amount',
+                    isNumber: true,
+                    width: 150,
+                    validator: (text) => text!.isEmpty ? 'Required' : null,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -49,11 +66,8 @@ class AddEntryDialog extends ConsumerWidget {
       actions: [
         Align(
           alignment: Alignment.center,
-          child: MaterialButton(
-            color: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+          child: CustomButton(
+            title: 'Save',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (type == EntryType.expense) {
@@ -71,11 +85,6 @@ class AddEntryDialog extends ConsumerWidget {
                 }
               }
             },
-            child: const OpenSans(
-              text: 'Save',
-              fontSize: 15,
-              color: Colors.white,
-            ),
           ),
         ),
       ],

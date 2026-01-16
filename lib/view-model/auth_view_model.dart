@@ -22,7 +22,7 @@ class AuthViewModel extends ChangeNotifier {
   bool isSignedIn = false;
   bool isObscure = true;
 
-  toggleObscure() {
+  void toggleObscure() {
     isObscure = !isObscure;
     notifyListeners();
   }

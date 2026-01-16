@@ -1,6 +1,7 @@
 import 'package:budget_app/components/app_text.dart';
 import 'package:flutter/material.dart';
 
+// ignore: strict_top_level_inference
 appDialog(BuildContext context, String title) {
   showDialog(
     context: context,

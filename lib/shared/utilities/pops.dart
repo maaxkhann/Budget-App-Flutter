@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class Pops {
+  // ignore: strict_top_level_inference
   static init() {
     EasyLoading.instance
       ..displayDuration = const Duration(milliseconds: 2000)

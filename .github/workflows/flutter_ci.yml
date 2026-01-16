@@ -1,0 +1,53 @@
+name: Flutter CI/CD
+
+# Trigger workflow on push to `main` branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Flutter App (Windows + Android)
+    runs-on: windows-latest
+
+    steps:
+      # 1️⃣ Check out repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: latest
+
+      # 3️⃣ Install Dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4️⃣ Run Analyzer (optional but recommended)
+      - name: Flutter analyze
+        run: flutter analyze
+
+      # 5️⃣ Run Unit Tests
+      - name: Run tests
+        run: flutter test
+
+      # 6️⃣ Build Android APK (optional)
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      # 7️⃣ Build Windows App
+      - name: Build Windows executable
+        run: flutter build windows
+
+      # 8️⃣ Upload Artifacts (optional) 
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-build
+          path: |
+            build/app/outputs/flutter-apk/*.apk
+            build/windows/runner/Release/*.exe

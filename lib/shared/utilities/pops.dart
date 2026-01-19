@@ -12,7 +12,7 @@ class Pops {
       ..indicatorSize = 45.0
       ..radius = 10.0
       ..progressColor = Colors.yellow
-      ..backgroundColor = Colors.grey
+      ..backgroundColor = Colors.grey.withValues(alpha: 0.9)
       ..indicatorColor = Colors.yellow
       ..textColor = Colors.white
       ..maskColor = Colors.blue.withValues(alpha: 0.5)
